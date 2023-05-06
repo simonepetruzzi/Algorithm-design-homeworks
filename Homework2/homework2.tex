@@ -1,0 +1,246 @@
+\documentclass[11pt]{article}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{amssymb,fge}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{pgfplots}
+\usepackage{bchart}
+\usepackage{listings}
+\usepackage{xurl}
+\usepackage{soul}
+\usepackage{amsmath}
+\usepackage{amssymb,fge}
+\usepackage[english]{babel}
+\usepackage{amsthm}
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\newcommand\Definition[1]{{\bfseries \ul{#1}}}
+\usetikzlibrary{shapes,positioning,calc}
+\usepackage{lettrine}
+\linespread{0.9}
+\usepackage[nottoc, notlof, notlot]{tocbibind}
+\definecolor{RYB1}{RGB}{218,232,252}
+\definecolor{RYB2}{RGB}{245,245,245}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\lstset{ %
+backgroundcolor=\color{white}, % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+basicstyle=\scriptsize, % the size of the fonts that are used for the code
+breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
+breaklines=true, % sets automatic line breaking
+captionpos=b, % sets the caption-position to bottom
+commentstyle=\color{mygreen}, % comment style
+deletekeywords={...}, % if you want to delete keywords from the given language
+escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
+extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+frame=single, % adds a frame around the code
+keepspaces=true, % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+keywordstyle=\color{blue}, % keyword style
+% language=Octave, % the language of the code
+morekeywords={*,...}, % if you want to add more keywords to the set
+numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+numbersep=5pt, % how far the line-numbers are from the code
+numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+showstringspaces=false, % underline spaces within strings only
+showtabs=false, % show tabs within strings adding particular underscores
+stepnumber=1, % the step between two line-numbers. If it's 1, each line will be numbered
+stringstyle=\color{mymauve}, % string literal style
+tabsize=2, % sets default tabsize to 2 spaces
+title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\lstdefinelanguage{JavaScript}{
+keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+keywordstyle=\color{blue}\bfseries,
+ndkeywords={class, export, boolean, throw, implements, import, this},
+ndkeywordstyle=\color{darkgray}\bfseries,
+identifierstyle=\color{black},
+sensitive=false,
+comment=[l]{//},
+morecomment=[s]{/*}{*/},
+commentstyle=\color{purple}\ttfamily,
+stringstyle=\color{red}\ttfamily,
+morestring=[b]',
+morestring=[b]"
+}
+\lstset{
+language=JavaScript,
+extendedchars=true,
+basicstyle=\scriptsize\ttfamily,
+showstringspaces=false,
+showspaces=false,
+numbers=left,
+numberstyle=\scriptsize,
+numbersep=9pt,
+tabsize=2,
+breaklines=true,
+showtabs=false,
+captionpos=b
+}
+\newcommand{\mysetminus}{\mathbin{\fgebackslash}}
+
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=10mm,
+ right=10mm,
+ top=15mm,
+ }
+\title{\textbf{Algorithm Design}\\
+	   Second Homework}
+\author{Students: Simone Petruzzi 1811872 , Domenico Tersigni 1817502}
+\date{December 24 2022}
+\begin{document}
+\maketitle
+\newpage
+
+\section{Exercise 1}
+Before seeing the approximation for the vertex cover problem, let's recall it:\\
+We have an undirected graph, having a set V of vertices and a set E of edges. The aim is to pick a subset S $\subseteq$ V of the vertices that includes at least one endpoint (vertex) of every edge, and we want the the cardinality $|S|$ to be the small as possible.\\
+
+In order to show that any greedy algorithm gives a 2-approximation to the best vertex cover we have to remember the degree sum formula, it states that given a graph $ G = (V,E)$:
+\begin{equation}
+\sum_{v \in V} deg(v) = 2  \left| E \right|
+\end{equation}
+By definition of vertex cover we need to cover all edges, and for each edge we pay a price at least equal to 1, this comes for the fact that in order to cover and edge we have to put one of its endpoints into the vertex cover set and it has a degree (so a weight) at least equal to 1. The best vertex cover has a price of at least $1 \cdot \left| E \right|$. The worst greedy algorithm we can build is an algorithm that cover all vertices but also in this case due to (1) we have that the price is  $2  \left| E \right|$. Then better greedy algorithms obviously select a smaller set of vertices with respect to the worst one, therefore the cost of these other greedy algorithms is for sure less or equal than $2  \left| E \right|$.\\  
+Therefore we can conclude that any greedy algorithm will give a 2-approximation to the best vertex cover.
+\newpage
+
+\section{Exercise 2}
+A randomized strategy that guarantees that we select the card with the maximal value, among N arbitrary cards, with a probability of at least $\frac{1}{4}$  is the following:
+\begin{itemize}
+\item \textbf{BiggestSoFar} is the highest number seen so far.
+\item We turn over half the cards without stopping and then in the second half we stop when we see the first \textbf{BiggestSoFar}, i.e, a number bigger then the biggest number in the first half.
+\end{itemize}
+
+This strategy has probability of  at least $\frac{1}{4}$ of success because it succedes whenever the largest number is in the second half, and the second largest number is in the first half. 
+We define two events:
+\begin{itemize}
+\item \textbf{A} = The largest number is in the second half
+\item \textbf{B} = The second largest number is in the first half 
+\end{itemize}
+
+Our strategy succedes if the event $ A \cap B$ happens.
+
+\begin{equation}
+P(A \cap B) = P(A) \cdot P(B|A).
+\end{equation}
+
+\begin{equation}
+P(A) =  \frac{N}{2}  \frac{1}{N} = \frac{1}{2} 
+\end{equation}
+
+\begin{equation}
+P(B|A) =  \frac{N}{2}  \frac{1}{N-1} > \frac{1}{2}
+\end{equation}
+
+Due to (3) and (4):  $P(A \cap B) > 1/4$.
+
+
+We can prove the correctness of this strategy by claiming that the probabillity that the card with the maximal value is in the second half is equal to $\frac{1}{2}$. If we choose in the second half a number that is bigger then the biggest number of the first half, this value is greater or equal than $ \frac{N}{2}$ values and for this reason it has a probability of at least $\frac{1}{2}$ to being the maximal value. Thus, our strategy has a probability of at least $\frac{1}{4}$ that we select the card with the maximal value.
+\newpage
+\section{Exercise 3}
+Given a graph $G=(V,E)$ and vertex weight $w_{i}$ for each vertex $v_{i} \in V$, we can formulate the vertex cover problem as IP formulation by using variable $x_{i}$ for each vertex taking vlaues 0,1 or 2 depending on how many times they are included in the set. We set 2 as upper bound since is useless adding a vertex more than two times, this provides no improvments since is simply adding cost to our final weight. The IP formulation is the following:
+\begin{equation}
+\begin{aligned}
+minimize \quad     & \sum_{i=1}^{|V|}x_{i}w_{i}\\
+\textrm{s.t.}\quad & 2x_{i} + x_{j} \ge 2\quad \forall\ e=(x_{i},x_{j})\ \in\ E\\
+                   & x_{i}\ \in \{0,1,2\}\quad x_{i}\ \in E\\
+                   & x_{j}\ \in \{0,1,2\}\quad x_{j}\ \in E
+\end{aligned}
+\end{equation}
+The $2x_{i} + x_{j} \ge 2$ constraint let us satisfy all cases:\\
+The constraint is satisfied when either $x_{j}$ is equal to 2 so that it is included at least 2 times in the multi-set S or when $x_{i}$ is included at lest one time in S.\\
+Since we know that IP is NP hard we can try relaxing the previous formulation obtaining a LP solution so that we can resolve it in polynomial time.	 We can do this just by removing the integrality constraints, so that variables can take values in $\mathbb{R}$, the formulation is the following one:
+\begin{equation}
+\begin{aligned}
+minimize \quad     & \sum_{i=1}^{|V|}x_{i}w_{i}\\
+\textrm{s.t.}\quad & 2x_{i} + x_{j} \ge 2\quad\quad \forall e=(x_{i},x_{j})\ \in\ E\\
+                   & 0 \leq x_{i} \leq 2\quad\quad\quad x_{i}\ \in\ E\\
+                   & 0 \leq x_{j} \leq 2\quad\quad\quad x_{j}\ \in\ E
+\end{aligned}
+\end{equation}
+Let OPT(LP*) be the optimal solution of LP problem and OPT(IP*) be the optimal solution to the IP problem. We know for sure that OPT(LP*) $\le$ OPT(IP*) since it is a relaxation. After we solved the LP problem and got the optimal solution OPT(LP*), we can round every $x_{i}^*$ of the LP solution to an integral $x_{i}$ solution as follows:
+\begin{equation}
+    \begin{cases}
+      x_{i}=0\quad if\quad x_{i}^* < \frac{1}{2}\\
+      x_{i}=1\quad if\quad \frac{1}{2} \leq x_{i}^* \leq 1\\
+      x_{i}=2\quad if\quad x_{i}^* > 1
+    \end{cases}
+\end{equation}
+Now we want to prove that in the worst case we obtain a 2-approximation. This is given by the fact that in the worst case we round $x_{i}^*=\frac{1}{2}$ to 1 that is exactly the double of the weight, so $c(x_{i}) \leq 2c(x_{i}^*)$:
+\begin{equation}
+c(x_{i}) = \sum_{i=1}^{|V|}x_{i}w_{i} = \sum_{i \in |V|:x_{i}^* \ge \frac{1}{2} } w_{i}\quad \leq \sum_{i=1}^{|V|}2x_{i}^* w_{i} = 2c(x_{i}^*)
+\end{equation}
+So this rounding gets a 2-approximation.
+
+
+\newpage
+\section{Exercise 4}
+In a congestion game, strategies and payoffs are defined in terms of a finite set \textbf{R} of resources and in terms of congestion functions $c_{r}: R \times \left \{ 1,..,n \right \} \rightarrow \mathbb{R}$. Every player has to select one among different subset of resources: $ \alpha_{i} \subseteq 2^R$ for every $\left \{ 1,..,n \right \}$. 	We define $\#(r,\alpha)$ the number of players using resource r in the strategy profile $\alpha $.
+The cost experienced by player i is defined as: $cost_{i}(\alpha) := \sum_{r \in \alpha_{i}}{ c_{r} (\#(r,\alpha))}$.
+Thus each player chooses a subset of the resources and the cost he pays is the total congestion of the resources he's choosing. The congestion of a resource only depends on the number of players choosing that resource.
+
+Social Cost \textbf{(SC)} by definition is: \begin{equation} SC(s) := \sum_{i=1}^{n} { cost_{i} (\alpha)} = \sum_{i=1}^{n} \sum_{r \in \alpha_{i}}{ c_{r} (\#(r,\alpha))} =  \sum_{r \in R} \sum_{i=1}^{\#(r,\alpha)}{ c_{r} (\#(r,\alpha))}  \end{equation}.
+
+Now we point out that the Rosenthal’s potential function $\Phi(\alpha)$ is different from SC(s), infact:
+
+\begin{equation}\Phi (\alpha) = \sum_{r \in R} \sum_{i=1}^{\#(r,\alpha)}{ c_{r} (i))} \le  \sum_{r \in R} \sum_{i=1}^{\#(r,\alpha)}{ c_{r} (\#(r,\alpha))}= SC(s) \end{equation}
+
+Due to the fact that $c_{r}$ is non decreasing, infact if $c_{r}$ was decreasing then $\Phi(\alpha) \ge SC(s)$.
+
+Now we know that no resource is ever used by more than $\lambda$ players. This means that $ \#(r,\alpha)) \le \lambda$.
+
+Then we can rewrite: 
+
+\begin{equation} SC(\alpha) = \sum_{r \in R} \#(r,\alpha) \cdot { c_{r} (\#(r,\alpha))} \le   \sum_{r \in R} \lambda \cdot { c_{r} (\#(r,\alpha))} \le  \lambda \cdot  \sum_{r \in R}\sum_{i=1}^{\#(r,\alpha)}{ c_{r} (i))} = \lambda \cdot \Phi (\alpha) \end{equation}
+
+Thus we have: 
+
+\begin{equation}
+SC(s) \le \lambda \cdot \Phi(\alpha) 
+\end{equation}
+
+And by multiplying both members of (10) by $\lambda$ we obtain: 
+
+\begin{equation}
+\lambda \cdot \Phi(\alpha)  \le  \lambda \cdot SC(s)
+\end{equation}
+
+Now we have two possibilities, if the state with the optimal social cost $s_{OPT}$ is a NE state, by definition we obtain PoS = 1. In this case is trivially satisfied the condition that $PoS \le \lambda$ because $\lambda$ is at least 1, due to the fact that \textit{no resources is ever used by more than 0 players} has no sense. In general the social optimum state is not necessarily a NE state. If $s_{OPT}$ is not a NE state, it means that in $s_{OPT}$ there is at least one player i who can reduce his own cost by changing his strategy from $\alpha_{i}$ to $\alpha_{i}^{'}$ obtaining $cost^{'}_{i} < cost_{i}$.
+Due to this fact and by the definition of potential function we know that when a single player i changes his strategy, the change in potential function equals to the change in the cost to i:  $cost^{'}_{i} - cost_{i} = \Phi(\alpha_{'}) - \Phi(\alpha)$
+and then we obtain \begin{equation}  \Phi(\alpha_{'}) = \Phi(\alpha) + cost^{'}_{i} - cost_{i} \end{equation}
+
+$cost^{'}_{i} - cost_{i}$ is a negative quantity and it means that $ \Phi(\alpha_{'})$ is decreasing. In contrast the change in the SC equals the total change in cost to all players. Hence the SC isn't often a valid potential function.
+
+Starting from an $s_{OPT}$ which is not a NE state, if there is a player (or more than one) that can improve its strategy we allow that. In this way the Rosenthal’s potential function always decrease. 
+ $\Phi(\alpha)$ has a minimum, because a congestion game always has at least one PNE. Finding a PNE in a congestion game is equivalent to finding a local minimum of the potential function. Any minimum of $\Phi(\alpha)$ is a PNE. Since there are a finite number of configurations and each $c_{r}$ is monotone there exists an equilibrium. 
+When we reach a minimum it is a NE state, and we call it $\hat{s}$ and the corresponding strategy profile $\hat{\alpha}$.
+
+For what we have said before $\Phi(\hat{\alpha}) \le \Phi(\alpha_{s_{OPT}})$ and from (12) and (13)  we deduct:  $SC(\hat{s}) \le \lambda \cdot \Phi(\hat{\alpha}) \le \lambda \cdot \Phi(\alpha_{s_{OPT}}) \le \lambda \cdot SC(s_{OPT}) $
+
+From that we obtain: \begin{equation} \frac{SC(\hat{s})} { SC(s_{OPT})} \le \lambda \end{equation}
+
+But we have no guarantee about the fact that $\hat{s}$ is the NE state with the minimum social cost, but the NE state with the minimum social cost has a social cost less or equal than $\hat{s}$, and for this fact the relation (15) holds even with the NE state with the minimum social cost and we have terminated our proof.
+
+\newpage
+\section{Exercise 5}
+Before discussing the approximation of the proposed algorithm, let's prove that it's outputting an independent set. The given greedy algorithm takes the first vertex from a uniform vertex random permutation of a given undirected graph G=(V,E) and adds it to S. Then iteratively the algorithm scans all the vertices of the uniform random permutation and checks if for all the vertices already added to S, there is some edge that connects the current vertex to vertices already in S, if there aren't, it adds the current vertex to S. Since with this procedure the algorithm does not place any neighbor of any vertex that is placed in S, it outputs for sure an independent set.\\
+Let's now discuss how far it goes from the optimal solution: we want to achieve at least $\frac{1}{d}$ of the optimal solution where d is the maximum degree of a vertex of V.\\
+Let T be the set containing nodes discarded by the algorithm (these are the neighbors of nodes added in S). We can give an upper bound for these nodes saying, for each vertex $t \in T$ we make an association to a vertex $s \in S$. A vertex in S can be associated at most d times since it has at most d neighbors. Hence we have that $|T| \leq d|S|$.\\
+Now let's say OPT is a maximal independent set for the graph G. We can associate each vertex $o \in OPT\symbol{92} S $ to a vertex $s \in S\symbol{92}OPT$ which is a neighbor of $o$ and for the same reasoning done above the number of nodes associated to a node $s \in S\symbol{92}OPT$  is at most d, thus (remembering that given two sets A and B: $|A\symbol{92}B|=|A|-|B|$):
+\begin{equation}
+|OPT\symbol{92}S| \leq d|S\symbol{92}OPT| \implies |S| \geq \frac{|OPT|}{d}
+\end{equation}
+\end{document}

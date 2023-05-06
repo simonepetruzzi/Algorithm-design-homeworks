@@ -1,0 +1,424 @@
+\documentclass{article}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{amssymb,fge}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{pgfplots}
+\usepackage{bchart}
+\usepackage{listings}
+\usepackage{xurl}
+\usepackage{soul}
+\usepackage{amsmath}
+\usepackage{amssymb,fge}
+\DeclareRobustCommand{\bbone}{\text{\usefont{U}{bbold}{m}{n}1}}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\newcommand\Definition[1]{{\bfseries \ul{#1}}}
+\usetikzlibrary{shapes,positioning,calc}
+\usepackage{lettrine}
+\linespread{0.9}
+\usepackage[nottoc, notlof, notlot]{tocbibind}
+\definecolor{RYB1}{RGB}{218,232,252}
+\definecolor{RYB2}{RGB}{245,245,245}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstset{ %
+backgroundcolor=\color{white}, % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+basicstyle=\scriptsize, % the size of the fonts that are used for the code
+breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
+breaklines=true, % sets automatic line breaking
+captionpos=b, % sets the caption-position to bottom
+commentstyle=\color{mygreen}, % comment style
+deletekeywords={...}, % if you want to delete keywords from the given language
+escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
+extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+frame=single, % adds a frame around the code
+keepspaces=true, % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+keywordstyle=\color{blue}, % keyword style
+% language=Octave, % the language of the code
+morekeywords={*,...}, % if you want to add more keywords to the set
+numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+numbersep=5pt, % how far the line-numbers are from the code
+numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+showstringspaces=false, % underline spaces within strings only
+showtabs=false, % show tabs within strings adding particular underscores
+stepnumber=1, % the step between two line-numbers. If it's 1, each line will be numbered
+stringstyle=\color{mymauve}, % string literal style
+tabsize=2, % sets default tabsize to 2 spaces
+title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+\lstdefinelanguage{JavaScript}{
+keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+keywordstyle=\color{blue}\bfseries,
+ndkeywords={class, export, boolean, throw, implements, import, this},
+ndkeywordstyle=\color{darkgray}\bfseries,
+identifierstyle=\color{black},
+sensitive=false,
+comment=[l]{//},
+morecomment=[s]{/*}{*/},
+commentstyle=\color{purple}\ttfamily,
+stringstyle=\color{red}\ttfamily,
+morestring=[b]',
+morestring=[b]"
+}
+\lstset{
+language=JavaScript,
+extendedchars=true,
+basicstyle=\scriptsize\ttfamily,
+showstringspaces=false,
+showspaces=false,
+numbers=left,
+numberstyle=\scriptsize,
+numbersep=9pt,
+tabsize=2,
+breaklines=true,
+showtabs=false,
+captionpos=b
+}
+\newcommand{\mysetminus}{\mathbin{\fgebackslash}}
+
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=10mm,
+ right=10mm,
+ top=15mm,
+ }
+\title{\textbf{Algorithm Design}\\
+	   First Homework}
+\author{Students: Simone Petruzzi 1811872 , Domenico Tersigni 1817502}
+\date{November 24 2022}
+\begin{document}
+\maketitle
+\newpage
+
+\section{Exercise 1}
+\subsection{a}
+We've implemented the algorithm using python version 3.10.8, and the code is the next page.
+\subsection{b}
+We can estimate the complexity of our algorithm through the dictionary that we use to store the states. In python dictionary is internally implemented as an hash table, and we know that in the average case, using hash table, the search operation costs O(1). All other operations have a total cost that is constant beacuse they are mostly comparison operations and appends. In our Big-O analysis we neglect constants and in order to estimate the complexity of our algorithm we have to estimate the number of recursive calls. A state is a quadruple with this shape $<a,b,c,n>$ where:
+\begin{itemize}
+\item $a=b=c=\frac{\sum_{k=0}^{L} l_{k}}{3}$
+\item n = number of kids
+\end{itemize}
+Each element of the quadruple is picked from the corresponding set, i.e. :
+\begin{itemize}
+\item $A = \left \{0, ... , \frac{\sum_{k=0}^{L} l_{k}}{3}  \right \}$
+\item $B = \left \{0, ... , \frac{\sum_{k=0}^{L} l_{k}}{3}  \right \}$
+\item $C = \left \{0, ... , \frac{\sum_{k=0}^{L} l_{k}}{3}  \right \}$
+\item $N = \left \{0, ... , n \right \}$
+\end{itemize}
+ In the worst case we have to go over all possible states, and the number of all possibile states is the number of all possible quadruples that we can have in the dictionary. That number is the cardinality of the cartesian product between the sets described above: $A\times B \times C \times N$.
+
+
+The cardinality of the output set of a Cartesian product is equal to the product of the cardinalities of all the input sets, in our case we obtain (neglecting constants) $ \frac{\sum_{k=0}^{L} l_{k}}{3}  \cdot \frac{\sum_{k=0}^{L} l_{k}}{3} \cdot \frac{\sum_{k=0}^{L} l_{k}}{3} \cdot n $.
+
+If we neglect $\frac{1}{3}$ which is a constant, the cost of our algorithm is $O(n \cdot (\sum_{k=0}^{L} l_{k})^{3})$
+
+\subsection{c}
+
+The algorithm starts by computing the sum of all the elements in the set, i.e, each kid has a level and we compute the sum of these levels. If this sum is not divisible by three we can't create three subsets with an equal sum. Conversely, we check if three subsets with the sum of elements equal to the sum of these levels divided by three exist or not, if so, the algorithm return an array that contains these three sets, if not it returns an empty list.
+We can do this by considering each item in the given array S one by one, starting from S[n], and for each item there are three possibilities:
+\begin{itemize}
+\item Put the current item in the first subset and recur for the remaining items with the remaining sum
+\item Put the current item in the second subset and recur for the remaining items with the remaining sum.
+\item Put the current item in the third subset and recur for the remaining items with the remaining sum.
+\end{itemize}
+The base case of the recursion would be when no items are left. \\
+
+We return true when three subsets, each with $target_{i} - (sum\textunderscore subset_{i} \textunderscore elements) ==0$, are found, where $target_{i} =  \frac{\sum_{k=0}^{L} l_{k}}{3}$ and $(sum\textunderscore subset_{i} \textunderscore elements) = \sum elements \in subset_{i} $ \\
+
+Our code tries to insert one element in the second subset only if inserting it in first subset doesn’t result in a solution, and it tries to insert it in the third subset only if the previous cases don’t result in any solution.
+Moreover, we add dictionary to the recursion function so that it can store the results of the search.
+For example, if we've already seen the state $<2,2,53,15>$ and $subProblem(2, 2, 53, 15)$ was called the second time, (some parameters are missing for simplicity) the dictionary can directly return the result of $subProblem(2, 5, 53, 15)$ without searching down the branch of it again. Suppose we have two consecutive elements equal to 3 in the array, we could obtain the state $<2, 5, 53, 15>$ from a previous state $<2, 5, 56, 17>$ in which we choose to insert the first 3 in the second set and the second 3 in the third one. This state could be also obtained from the same previous state in which we choose to insert the first 3 in the third set and then the second 3 in the second set; in this second case we avoid to check if it is a safe state because we already know that the $subProblem(2, 2, 53, 15)$ is false.
+For this reason it is surely correct, becuse it splits the problem into simpler subproblems in a recursive way, and if a subproblem occurs many times, then dynamic programming will solve it only one time. Here each subProblem with the same solution correspond to a possible state of our dictionary, and if we go through all these states (in the worst case) we surely obtain the correct solution.
+\newpage
+\begin{lstlisting}[language=python,caption={},label={lst:uno}]
+def subProblem(S, n, target1, target2, target3, first, second, third, sum_first_elements, sum_second_elements, sum_third_elements, states):
+	if(target1 - sum_first_elements == 0) and (target2 - sum_second_elements ==0) and (target3 - sum_third_elements ==0):
+		return True
+	if n<0:
+		return False
+	state = (target1 - sum_first_elements, target2 - sum_second_elements, target3 - sum_third_elements, n)
+
+	if state not in states:
+
+		A = False
+		first_free_space = target1 -((sum_first_elements) + S[n])
+		if(sum_first_free_space >=0):
+			sum_first_elements = sum_first_elements + S[n]
+			A = subProblem(S, n-1, target1, target2, target3, first, second, third, sum_first_elements, sum_second_elements, sum_third_elements, states)
+			if(A):
+				first.append(S[n])
+			else:
+				sum_first_elements = sum_first_elements - S[n]
+
+		B = False
+		second_free_space = target2 -((sum_second_elements) + S[n])
+		if(second_free_space >=0):
+			sum_second_elements = second_elements + S[n]
+			A = subProblem(S, n-1, target1, target2, target3, first, second, third, sum_first_elements, sum_second_elements, sum_third_elements, states)
+			if(B):
+				second.append(S[n])
+			else:
+				sum_second_elements = sum_second_elements - S[n]
+
+		C = False
+		third_free_space = target3-((sum_third_elements) + S[n])
+		if(third_free_space >=0):
+			sum_first_elements = sum_third_elements + S[n]
+			A = subProblem(S, n-1, target1, target2, target3, first, second, third, sum_first_elements ,sum_second_elements, sum_third_elements, states)
+			if(C):
+				third.append(S[n])
+			else:
+				sum_third_elements = sum_third_elements - S[n]
+		
+		states[state] = A or B or C
+		return states[state]
+
+def 3partition(S):
+
+	if len(S) < 3:
+		return False
+
+	states = {}
+	total = sum(S)
+	first = []
+	second = []
+	third = []
+	sum_first_elements = 0
+	sum_second_elements = 0
+	sum_third_elements = 0
+	
+	if($total \% 3 ==0) and subProblem(S, len(S) - 1, total//3, total//3, total//3, first, second, third, sum_first_elements, sum_second_elements, sum_third_elements, states):
+		return  [first,second,third]
+	else
+		return []
+
+		
+\end{lstlisting}
+\newpage
+\section{Exercise 2}
+In order to show that our problem is NP-Complete, we need to do the following: prove that our problem X is NP and choose a problem Y that is known to be NP-Complete and prove that  $ Y \le_{p} X$ \\
+If any problem is in NP, then given a certificate, which is a solution to the problem and an instance of the problem, we will be able to decide whether solution is correct or no in polynomial time.
+For our problem a certificate is a set of advertisers of size k and we can identify the certificate using algorithm 1,
+\begin{algorithm}
+\caption{}\label{alg:cap}
+\begin{algorithmic}
+\State $S \gets set\ of\ advertisers\ of\ size\ k$
+\State $F_{i} \gets set\ of\ people\ associates\ with\ i , \forall i\in S$
+\State $N \gets set\ of\ people\ in\ the\ network$
+\ForAll{$i \in S $}
+\ForAll{$j \in  F_{i} $}
+$N \setminus $j
+\EndFor
+\EndFor
+\If{$N\ isEmpty$}
+\State $a\gets YES$
+\Else
+\State $a\gets NO$
+\EndIf
+\State \textbf{return} $a$
+\end{algorithmic}
+\end{algorithm}
+that checks it in polynomial time $O(n^{2})$, thus \textbf{our problem is NP}.
+
+We choose as Y the Set Cover problem, that is known to be NP-Complete. Therefore, for any given instance $I_{y}$  for Set Cover, an instance $I_{x}$ must be created for our problem, in polynomial time, such that if $I_{y}$ is a YES instance of Set Cover, then $I_{x}$ is a YES instance of our problem, and if $I_{x}$ is a YES instance of our problem, then $I_{y}$ is a YES instance of Set Cover.
+\\
+The Set Cover problem is: Given a set \textbf{U} of \textbf{n} elements, a collection $S_{i}.... S_{m}$ of subsets of U, and a number \textbf{k}, does there exists a collection of at most k of these sets, whose union is equal to all of U?\\
+The instance can be created in this way:
+
+\begin{algorithm}
+\caption{}\label{alg:cap}
+\begin{algorithmic}
+\State $U \gets set\ which\ we \ would \ cover\ $
+\State $S_{i} \gets \textbf{i-th}\ subset\ of\ U$
+\State $N = \emptyset $
+\State $F_{i} \gets set\ of\ people\ associates\ with\ person\ \textbf{i} \ in \ the\ network\ $
+
+\ForAll{$i \in U $}
+\State $N \gets N\cup \left \{i  \right \}$
+\If{$\neg \exists S_{i}$}
+\State $S_{i}	\gets S_{i}=\left \{i  \right \}$
+\EndIf
+\If{$\exists S_{i}\  \wedge i \notin S_{i} $}
+\State $S_{i} \gets S_{i}\cup \left \{i  \right \}$
+\EndIf
+\ForAll{$j \in S_{i} $}
+\State $S_{j} \gets S_{j}\cup \left \{i  \right \}$
+\EndFor
+\State $F_{i} \gets S_{i}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Now, if an instance $I_{x}$ of our problem has a valid solution, through it, it's possible to construct a solution for the instance $I_{y}$ of Set Cover and if $I_{x}$ doesn't have a valid solution, not even $I_{y}$ has one.
+Given a valid solution for  $I_{x}$, the construction of a valid solution for $I_{y}$ can be made in this way:
+$\forall i\in S$, where S is the set of advertisers of size k, which is the solution of our problem, we select subset $S_{i}$. This set of k advertisers is able to advertise a product to every person in N, meanwhile the union of these k subsets is equal to all of U.
+
+\textbf{Proof of correctness}:
+U can be covered with at most k subsets, if and only if  there is a set of advertisers of size at most k that advertise the product to all N. This can be proved in this way: If $S_{i}, ... , S_{l}$ are $l \le k$ subsets that cover U, then $F_{i}, ... F_{l}$ contains all people of the network N and if we choose the set of advertisers  $\left \{1, 2, ..., l  \right \}$ we have a solution. Conversely if  $\left \{1, 2, ..., l  \right \}$ is a set of advertisers of size $ l \le k $ that is a solution for our problem, then $F_{i}, ... F_{l}$ cover all the network and then $S_{i}, ... , S_{l}$ cover all U.
+
+
+\textbf{Example of a satisfiable and unsatisfiable instances:}
+
+$Instance\ I_{y} \ of \ Set \ Cover:  
+U = \left \{1,2,3,4,5,6,7,8,9  \right \} \ S_{1} = \left \{1,2 \right \} \ S_{2} = \left \{4,7 \right \} \ S_{3} = \left \{5,8 \right \} \ S_{4} = \left \{9,10 \right \} \ S_{5} = \left \{2,3,4,5 \right \} \ S_{6} = \left \{6,7,8,10 \right \} \ S_{7} = \left \{1,3,6,9 \right \}$
+\\
+$Instance\ I_{x} \ of \ our \ problem:  
+N = \left \{1,2,3,4,5,6,7,8,9  \right \} \ F_{1} = \left \{1,2,7 \right \} \ F_{2} = \left \{1,2,4,5,7 \right \} \ F_{3} = \left \{3,5,7,8 \right \} \ F_{4} = \left \{2,4,5,9,10 \right \} \ F_{5} = \left \{2,3,4,5 \right \} \ F_{6} = \left \{6,7,8,10 \right \} \ F_{7} = \left \{1,2,3,6,7,9 \right \}  \ F_{8} = \left \{3,6,8 \right \} \ F_{9} = \left \{4,7,9 \right \}\ F_{10} = \left \{4,6,10 \right \}$
+
+
+If we set \textbf{k = 3}
+
+
+$Solution\ for\ I_{x}: We\ choose\ as\ advertisers\: 5,6,7$
+
+
+$Solution\ for\ I_{y}: We\ choose\ as\ subsets\: S_{5}, S_{6}, S_{7}$
+
+
+If we set \textbf{k = 2}
+
+
+$Solution\ for\ I_{x}: There\ isn't$
+
+
+$Solution\ for\ I_{y}: There\ isn't$
+
+
+
+
+
+
+\newpage
+\section{Exercise 3}
+\subsection{a}
+For the dynamic strategy we compute thresholds using the recursive formula presented in the point c (see below in section c).
+First we analyze the case with three prizes (n=3) assuming that $E_{3}(P)=\frac{1}{2}$ and $\tau_{3}=0$
+\begin{equation}
+E_{2}(P)=(1-\tau_{2})(\frac{\tau_{2}+1}{2})+\tau_{2}(1-\tau_{3})(\frac{\tau_{3}+1}{2})=\frac{1-\tau_{2}^{2}+\tau_{2}}{2}
+\end{equation}
+\begin{equation}
+\frac{d}{d\tau_{2}}[E_{2}(P)]=\frac{1}{2}(-2\tau_{2}+1)
+\end{equation}
+now if we set the equation equal to zero we obtain value $\tau_{2} =\frac{1}{2}$.\\
+Let's proceed calculating $\tau_{1}$:
+\begin{equation}
+E_{1}(P)= (1-\tau_{1})(\frac{\tau_{1}+1}{2})+\tau_{1}(1-\tau_{2})(\frac{\tau_{2}+1}{2})+\tau_{1}\tau_{2}(1-\tau_{3})(\frac{\tau_{3}+1}{2})=\frac{4-4\tau_{1}^{2}+5\tau_{1}}{8}
+\end{equation}
+as we did for the previous case we obtain $\tau_{1}=\frac{5}{8}$.\\
+The case for n=2 is resolved with the same methodology applied above obtaining $\tau_{1}=\frac{1}{2}$ and $\tau_{2}=0$
+\subsection{b}
+Let's discuss the static threshold for $n=1,2$: \\
+let $\tau$ denote the static threshold for $n=1$, here the solution is trivial because having a single extraction we are forced to take whatever it comes, so $\tau = 0$. The expected value here is $\frac{1}{2}$.\\
+Now let's discuss the case for n=2, therefore we have $X_{1}$ and $X_{2}$ $\sim$  i.i.d of Uniform (0,1). We define the reward Y as:\\
+$$\begin{cases}
+X_{1}\quad if\ X_{1} > \tau \\
+X_{2}\quad if\ X_{1} \le \tau \wedge X_{2} > \tau \\
+0\quad otherwise
+\end{cases}$$
+\begin{equation}
+Y=X_{1}I(x_{1}>\tau) + X_{2}I(X_{1} \le \tau \cap X_{2} > \tau )
+\end{equation}
+\begin{equation}
+\EX(Y)= \int_{\tau}^{1}x_{1}dx_{1}+\int_{0}^{\tau} \int_{\tau}^{1}x_{2}dx_{2}dx_{1}=\frac{1+\tau}{2} (1-\tau^{2})
+\end{equation}
+Now for maximizing the value we derive (2) with respect to $\tau$, then setting equal to 0 we obtain $\tau=\frac{1}{3}$ 
+\subsection{c}\label{1.1}
+
+Notation: 
+\begin{itemize}
+\item we define $E_{n}(P) = 1/2$ as the expectation value of our strategy after time n-1 and before time n , infact if we've arrived at time n, it means that there is only one prize left and beacuse of all prizes are distributed independently from the uniform distribution over [0, 1], its expected value is $\frac{1}{2}$ and it makes sense to use $\tau_{n} = 0$, because there are no more chances.
+\item $X_{t} \sim i.i.d\ Uniform(0,1)$
+\end{itemize}
+If we want compute recursively the expectation of the best dynamic threshold as a function of n, we have to define: 
+\begin{itemize}
+\item $E_{n-1}(P) = P(X_{n-1} > \tau_{n-1}) \EX(X_{n-1} \mid X_{n-1} > \tau_{n-1}) + P(X_{n-1} \le \tau_{n-1}) P(X_{n} > \tau_{n})\EX(X_{n} \mid X_{n} > \tau_{n})$  
+\end{itemize}
+If we compute the probabilities and the conditional expected values in the expression above we obtain:
+\begin{itemize}
+\item  $E_{n-1}(P) = (1- \tau_{n-1}) (\frac{ \tau_{n-1} +1}{2}) + (\tau_{n-1}) (1- \tau_{n}) (\frac{ \tau_{n} +1}{2})$ 
+\end{itemize}
+In order to find the best dynamic threshold for n-1, i.e. $\tau_{n-1}$, we have to maximize the expression above with respect to $\tau_{n-1}$, which is the only variable we have, because as we said before we assume $\tau_{n} = 0$. \newline
+\begin{equation}
+\begin{aligned}
+\frac{d}{d \tau_{n-1}}[E_{n-1}(P)] = {} &\ \frac{d}{d \tau_{n-1}}[(1- \tau_{n-1}) (\frac{ \tau_{n-1} +1}{2}) + (\tau_{n-1}) (1- \tau_{n}) (\frac{ \tau_{n} +1}{2})] = \frac{d}{d \tau_{n-1}}[(1- \tau_{n-1}) (\frac{ \tau_{n-1} +1}{2}) + (\tau_{n-1}) \frac{1}{2}] = \\
+								   & \frac{1}{2} \frac{d}{d \tau_{n-1}}[(1- \tau_{n-1}^2) + (\tau_{n-1})] = \frac{1}{2}(-2\tau_{n-1} +1)
+\end{aligned}
+\end{equation}
+To maximize, we have to set (6) equal to zero and if we do that we obtain $\tau_{n-1} = \frac{1}{2}$ =$E_{n}(P) $  \newline
+Recursively, if we want to find the best dynamic threshold for n-2,  i.e. $\tau_{n-2}$, we have $E_{n-2}(P)$, which will be a function of $\tau_{n-2},\  \tau_{n-1}\ $and  $\tau_{n}$ but we know $ \tau_{n-1}$\ and $\tau_{n}$ , then $\tau_{n-2}$ will be the only variable of that expression, and if we maximize with respect to $\tau_{n-2}$ we obtain the best dynamic threshold for n-2, i.e $\tau_{n-2} =E_{n-1}(P) $ where $E_{n-1}(P)$ is computed using $\tau_{n-1} = \frac{1}{2}=E_{n}(P) $. And so on.
+
+\newpage
+\section{Exercise 4}
+\subsection{a}
+We are on a line where $i^{th}$ house is placed at a given kilometer $L_{i}$ ($L_{1} < L_{2} <....< L_{k}$), and the $j^{th}$ hospital is placed at kilometer $H_{j}$. Hospital placement must satisfy: $\max_i[\min_j |L_{i}-H_{j}|] \le d $
+
+\begin{algorithm}
+\caption{}\label{alg:cap}
+\begin{algorithmic}
+\State $ given\ L_{1} < L_{2} <....< L_{k}$
+\If{k==0}
+\State \textbf{return} $0$
+\EndIf
+\State $h=0$
+\State $H_{1}=L_{1}+d$
+\For{$i=2\ to\ k\ $}
+\If{$|L_{i}-H_{j}| > d$}
+\State $h=h+1$
+\State $H_{h}=L_{i}+d$
+\EndIf
+\EndFor
+\State \textbf{return} $H_{1},....,H_{h}$
+\end{algorithmic}
+\end{algorithm}
+\subsection{b}
+The loop in the code is the main instruction that defines the overall complexity. This loop has complexity depending from k and it's $\Theta(k)$ since we scan all the k houses to produce the solution with a greedy approach.
+\subsection{c}
+Let OPT be an optimal solution having m hospitals placed at distances $H_{1}<...<H_{m}$. Let $\{ G_{1},...,G_{p} \}$ be the output of the proposed alogorithm. We want to ensure that for all our algorithm solutions, the number of hospitals given by the optimal solution is major or equal of the number of hospitals that are allocated by the algorithm (i.e m $\ge$ p) and also we must ensure that the hospitall location $H_{g}$ is not further than $G_{g}$ given by our algorithm (i.e $H_{g} \le G_{g} $). Let's see by cases:\\
+The case for \textbf{0 houses} is trivial since we have no hospitals to allocate and the empty set is returned.\\
+When we have k=1 (\textbf{1 house}) our algorithm places $G_{1}=L_{1}+d$. If this is not optimal one of the two clauses that before we imposed must be unsatisfied. m=0 is not possible since we have one house that otherwise does not receive coverage by any hospital. Having $G_{1} < H_{1}$ is also not possible since this would imply $(H_{1}-L_{1}) > (G_{1}-L_{1})=d$ implying OPT not being an optimal solution because $L_{1}$ has no coverage by $H_{1}$. \\
+Let's analyze the \textbf{generic case}, thus we must ensure that m $\ge$ p and $H_{g}\le G_{g} $ for all g $\in$ $\{ 1,..,p \}$. Suppose that g is the smallest index for which the two properties are false, this implies that for $g-1$ the properties are true (we proved $g>1$) but not for g, that implies $m \ge g-1$ and $H_{g-1} \le G_{g-1}$. Let $k(g-1)$ be the index in which the algorithm places $G_{g-1}$ for covering house $L_{k(g-1)}$ this would imply $G_{g-1}=L_{k(g-1)}+d$. Let $k(g)$ denote the index in which the algorihtm places $G_{g}$ in $L_{k(g)}$, this implies $G_{g}=L_{k(g)}+d$, and also $L_{k(g)} > L_{k(g-1)}$, moreover we must have that $ |L_{k(g)}-G_{g-1}| > d $ because this is the condition that triggers the placing for $G_{g}$. So let's summarize the informations:
+\begin{equation}
+|L_{k(g)}-G_{g-1}| > d
+\end{equation}
+\begin{equation}
+L_{k(g-1)}=G_{g-1}-d
+\end{equation}
+\begin{equation}
+L_{k(g)}>L_{k(g-1)}
+\end{equation}
+From here follows that:
+\begin{equation}
+L_{k(g)}>G_{g-1}+d
+\end{equation} 
+Moreover we know that for $g-1$ we have $H_{g-1}\le G_{g-1}$ and therefore this produces an inequality for $g-1$ since from (10) we obtain that:
+\begin{equation}
+L_{k(g)} > H_{j}+d\ for\ j=1,...,g-1 
+\end{equation}
+Since OPT is a solution $L_{k(g)}$ must be in range with at least one hospital and there must be one more tower that is $m>g-1$. Since we assumed that for g the two conditions are false, combining this with $m>g-1$ we find that $H_{g}>G_{g}$, but we place $G_{g}=L_{k(g)}+d$ so it results that $H_{j}>G_{g}=L_{k(g)}+d$ for $j=s,...,m$ so $H_{j}$ is outside the desired range making OPT be not the optimal solution.
+\newpage
+\section{Excersise 5}
+\subsection{a}
+By hypotesis we know that we have a Graph G=(V,E) where all edge capacities are integers of even value except for one single edge $e^{*}$ that has odd value. Furthermore is given a max flow, say $\hat{f}$, of odd value. By the \textit{integrality theorem} we know that if c(e) $\forall$ e $\in$ E are integers, then there exist a max flow \textit{f} for which every flow value \textit{f(e)} is an integer, thus $\hat{f}$ must be an integer.\\
+If $\hat{f}$ is a maximum flow we know that there exist a \textit{min cut} (A,B) such that c(A,B) = val($\hat{f}$):
+\begin{equation}
+c(A,B)= \sum_{e\ out\ of\ A} c_e =\ val (\hat{f})
+\end{equation}
+If the value of $\hat{f}$ is odd (and we know this by hypothesis), it means that in $\sum_{e\ out\ of\ A} c_e$ there is a value that is odd (since integer summation between n even numbers and a single odd value is overall odd). Since we have a single edge capacity that has odd value $e^{*}$ then $f(e^{*})$ should be major of 0 (i.e $f(e^{*}) > 0 $) and flow must pass in the edge with odd value, if not the flow will always have an even value.
+\subsection{b}
+In addition to the fact that there will always exist flow in $e^{*}$, it always will be maximum. The reason for $fe^{*} = c_{e^{*}}$ is due to the fact that given the maximum flow $\hat{f}$ it means that there are no s-t paths in the residual graph:
+\begin{equation}
+val(\hat{f})=\hat{f}^{out}(A)-\hat{f}^{in}(A)=\sum_{e\ out\ of\ A}\hat{f}(e)-\sum_{e\ into\ A}\hat{f}(e)=\sum_{e\ out\ of\ A}c_{e}-0=c(A,B)
+\end{equation}
+since there is no flow that enters into the nodes of A, the capacity is maximum for every edge out of A, and the flow on $e^{*}$ is full.
+\end{document}
